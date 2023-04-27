@@ -1,0 +1,13 @@
+.layer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	contain: layout style size;
+}
+
+.shape {
+	position: absolute;
+	pointer-events: none;
+	overflow: visible;
+	transform-origin: top left;
+}

@@ -1,44 +1,9 @@
-import {signal} from '@preact/signals';
-
 import {TSession, getSession} from './sessions';
+import {store} from './store';
 import {PencilTool} from './tools/PencilTool';
-import {SessionType, TBounds, TShape, Viewport} from './types';
+import {SessionType, TBounds, TShape, ToolType, Viewport} from './types';
 import {Utils} from './utils';
 import {Vec} from './vec';
-
-const store = <T>(initialValue: T) => {
-	const sig = signal<T>(initialValue);
-
-	const set = (newValue: T): void => {
-		if (newValue !== sig.peek()) {
-			sig.value = newValue;
-		}
-	};
-
-	const update = (updateFn: (value: T) => T) => {
-		set(updateFn(sig.peek()));
-	};
-
-	const patch = (patch: Partial<T>) => {
-		update((prevValue) => ({
-			...prevValue,
-			...patch,
-		}));
-	};
-
-	const mutate = (mutator: (value: T) => void) => {
-		const clone = structuredClone(sig.peek());
-		mutator(clone);
-		set(clone);
-	};
-
-	return Object.assign(sig, {
-		set,
-		update,
-		patch,
-		mutate,
-	});
-};
 
 export class SketchApp {
 	tools = {
@@ -47,6 +12,7 @@ export class SketchApp {
 
 	session?: TSession;
 	currentTool = this.tools.pencil;
+	activeTool = store<ToolType>('pencil');
 	currentPoint = [0, 0];
 
 	bounds: TBounds = {
@@ -89,8 +55,8 @@ export class SketchApp {
 		const {bounds, viewport} = this;
 
 		this.currentPoint = Vec.sub(
-			Vec.div(Utils.getPoint(event, bounds), viewport.value.zoom),
-			viewport.value.offset,
+			Vec.div(Utils.getPoint(event, bounds), viewport.peek().zoom),
+			viewport.peek().offset,
 		);
 	};
 
@@ -109,7 +75,7 @@ export class SketchApp {
 	};
 
 	get currentShape() {
-		return this.shapes.value.at(-1);
+		return this.shapes.peek().at(-1);
 	}
 
 	updateCurrentShape = (patch: Partial<TShape>) => {
@@ -119,6 +85,11 @@ export class SketchApp {
 				...patch,
 			};
 		});
+	};
+
+	selectTool = (tool: ToolType) => {
+		this.activeTool.set(tool);
+		this.currentTool = this.tools[tool];
 	};
 
 	// Events

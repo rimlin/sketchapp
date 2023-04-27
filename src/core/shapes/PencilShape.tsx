@@ -1,7 +1,6 @@
 import {h} from 'preact';
 
-import {TPoints} from '../types';
-import styles from '../../components/app/style.scss';
+import {TPoints} from 'core/types';
 
 export class PencilShape {
 	getPath = (points: number[][]) => {
@@ -15,7 +14,7 @@ export class PencilShape {
 
 	Component = ({points}: {points: TPoints}) => {
 		return (
-			<svg class={styles.svgContainer}>
+			<svg class="svgContainer">
 				<path
 					d={this.getPath(points)}
 					fill="none"
