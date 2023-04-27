@@ -12,7 +12,7 @@ export class PencilShape {
 			: '';
 	};
 
-	Component = ({points}: {points: TPoints}) => {
+	component = ({points}: {points: TPoints}) => {
 		return (
 			<svg class="svgContainer">
 				<path

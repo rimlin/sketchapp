@@ -5,6 +5,7 @@ export type TPoints = TVec[];
 export type TShapeType = 'pencil';
 
 export type TShape = {
+	id: number;
 	type: TShapeType;
 	startPoint: TVec;
 	points: number[][];

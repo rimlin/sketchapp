@@ -24,9 +24,7 @@ export const useCanvasEvents = (
 		app.onPointerUp(event);
 	};
 
-	const onPointerLeave = (event: PointerEvent) => {
-		console.log(event);
-	};
+	const onPointerLeave = (event: PointerEvent) => {};
 
 	const memo = useMemo(
 		() => ({

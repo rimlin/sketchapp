@@ -1,8 +1,8 @@
 import {h} from 'preact';
 
-import {getShape} from 'core/shapes';
 import {useApp} from 'hooks/useApp';
 import {useViewportEvents} from 'hooks/useViewportEvents';
+import {Shape} from 'components/shape';
 
 import styles from './style.scss';
 
@@ -26,23 +26,9 @@ export const Viewport = () => {
 			  `,
 			}}
 		>
-			{shapes.value.map((shape, index) => {
-				const {Component} = getShape(shape.type);
-
-				return (
-					<div
-						key={index}
-						class={styles.shape}
-						style={{
-							transform: `translate(${shape.startPoint[0]}px, ${shape.startPoint[1]}px)`,
-							width: 100,
-							height: 100,
-						}}
-					>
-						<Component points={shape.points} />
-					</div>
-				);
-			})}
+			{shapes.value.map((shape) => (
+				<Shape key={shape.id} shape={shape} />
+			))}
 		</div>
 	);
 };
