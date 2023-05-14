@@ -6,7 +6,7 @@ import {Vec} from 'core/vec';
 import {useApp, useCanvasRef} from './useApp';
 
 export const useViewportEvents = () => {
-	const {viewport, bounds, updateBounds, updateViewport} = useApp();
+	const {viewport, bounds, updateBounds, updateViewport, pan} = useApp();
 	const canvasRef = useCanvasRef();
 
 	useEffect(() => {
@@ -35,7 +35,7 @@ export const useViewportEvents = () => {
 					Math.max(0.1, prev.zoom * Math.pow(2, pinchDelta)),
 				);
 
-				const center = Utils.getPoint(event, bounds);
+				const center = Utils.getRelativePoint(event, bounds);
 				const point = prev.offset;
 
 				const p0 = Vec.sub(Vec.div(center, prev.zoom), point);
@@ -46,14 +46,9 @@ export const useViewportEvents = () => {
 					zoom,
 				});
 			} else {
-				const prev = viewport.peek();
+				const delta = Vec.neg([event.deltaX, event.deltaY]);
 
-				updateViewport({
-					offset: Vec.sub(
-						prev.offset,
-						Vec.div([event.deltaX, event.deltaY], prev.zoom),
-					),
-				});
+				pan(delta[0], delta[1]);
 			}
 		};
 	}, []);

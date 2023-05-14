@@ -25,4 +25,5 @@ export type Viewport = {
 
 export enum SessionType {
 	Pencil = 'pencil',
+	Hand = 'hand',
 }

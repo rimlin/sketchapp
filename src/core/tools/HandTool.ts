@@ -1,22 +1,14 @@
-import {Utils} from 'core/utils';
-
 import {SessionType} from '../types';
 
 import {BaseTool} from './BaseTool';
 
-export class PencilTool extends BaseTool {
+export class HandTool extends BaseTool {
 	isActive = false;
 
 	onPointerDown = () => {
 		this.isActive = true;
 
-		this.app.addShape({
-			id: Utils.getId(),
-			type: 'pencil',
-			startPoint: this.app.currentPoint,
-			points: [[0, 0]],
-		});
-		this.app.startSession(SessionType.Pencil);
+		this.app.startSession(SessionType.Hand);
 	};
 
 	onPointerMove = () => {

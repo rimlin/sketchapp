@@ -1,5 +1,6 @@
 import {TSession, getSession} from './sessions';
 import {store} from './store';
+import {HandTool} from './tools/HandTool';
 import {PencilTool} from './tools/PencilTool';
 import {SessionType, TBounds, TShape, ToolType, Viewport} from './types';
 import {Utils} from './utils';
@@ -8,12 +9,14 @@ import {Vec} from './vec';
 export class SketchApp {
 	tools = {
 		pencil: new PencilTool(this),
+		hand: new HandTool(this),
 	};
 
 	session?: TSession;
 	currentTool = this.tools.pencil;
 	activeTool = store<ToolType>('pencil');
-	currentPoint = [0, 0];
+	currentPoint = [0, 0]; // Pointer relative viewport of canvas
+	currentScreenPoint = [0, 0]; // Raw screen pointer
 
 	bounds: TBounds = {
 		top: 0,
@@ -54,8 +57,9 @@ export class SketchApp {
 	updateCurrentPoint = (event: PointerEvent) => {
 		const {bounds, viewport} = this;
 
+		this.currentScreenPoint = Utils.getPoint(event);
 		this.currentPoint = Vec.sub(
-			Vec.div(Utils.getPoint(event, bounds), viewport.peek().zoom),
+			Vec.div(Utils.getRelativePoint(event, bounds), viewport.peek().zoom),
 			viewport.peek().offset,
 		);
 	};
@@ -90,6 +94,29 @@ export class SketchApp {
 	selectTool = (tool: ToolType) => {
 		this.activeTool.set(tool);
 		this.currentTool = this.tools[tool];
+	};
+
+	get cameraCenterPoint() {
+		const {offset} = this.viewport.value;
+		const {bounds} = this;
+
+		const abs = Vec.div(
+			Vec.sub([bounds.bottom, bounds.right], [bounds.top, bounds.left]),
+			2,
+		);
+
+		return Vec.add(abs, offset);
+	}
+
+	pan = (dx: number, dy: number) => {
+		const {viewport} = this;
+		const prev = viewport.peek();
+
+		const diff = Vec.add(prev.offset, Vec.div([dx, dy], prev.zoom));
+
+		this.updateViewport({
+			offset: diff,
+		});
 	};
 
 	// Events
