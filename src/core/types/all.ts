@@ -23,7 +23,6 @@ export type Viewport = {
 	zoom: number;
 };
 
-export enum SessionType {
-	Pencil = 'pencil',
-	Hand = 'hand',
-}
+export type TPageState = {
+	shapes: number[];
+};

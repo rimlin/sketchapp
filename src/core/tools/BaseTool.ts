@@ -1,9 +1,9 @@
 import {SketchApp} from '../app';
 
 abstract class EventCallbacks {
-	onPointerDown?: (event: PointerEvent) => void;
-	onPointerMove?: (event: PointerEvent) => void;
-	onPointerUp?: (event: PointerEvent) => void;
+	onPointerDown?: () => void;
+	onPointerMove?: () => void;
+	onPointerUp?: () => void;
 }
 
 export class BaseTool extends EventCallbacks {

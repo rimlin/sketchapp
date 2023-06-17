@@ -1,9 +1,9 @@
 import {h} from 'preact';
 
-import {TPoints} from 'core/types';
+import {TPoints, TVec} from 'core/types';
 
 export class PencilShape {
-	getPath = (points: number[][]) => {
+	getPath = (points: TVec[]) => {
 		return points.length > 1
 			? `M${points[0][0]},${points[0][1]} L${points
 					.slice(1)

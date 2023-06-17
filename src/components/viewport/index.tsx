@@ -8,11 +8,13 @@ import styles from './style.scss';
 
 export const Viewport = () => {
 	const app = useApp();
-	const shapes = app.shapes;
+	const shapes = app.pageState.value.shapes;
 	const viewport = app.viewport;
+	app.shapes.value;
 
 	useViewportEvents();
 
+	console.log('render shapes', shapes);
 	return (
 		<div
 			class={styles.layer}
@@ -26,8 +28,8 @@ export const Viewport = () => {
 			  `,
 			}}
 		>
-			{shapes.value.map((shape) => (
-				<Shape key={shape.id} shape={shape} />
+			{shapes.map((shapeId) => (
+				<Shape key={shapeId} shape={app.getShapeById(shapeId)} />
 			))}
 		</div>
 	);

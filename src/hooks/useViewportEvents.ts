@@ -6,7 +6,8 @@ import {Vec} from 'core/vec';
 import {useApp, useCanvasRef} from './useApp';
 
 export const useViewportEvents = () => {
-	const {viewport, bounds, updateBounds, updateViewport, pan} = useApp();
+	const {viewport, bounds, updateBounds, updateViewport, pan, history} =
+		useApp();
 	const canvasRef = useCanvasRef();
 
 	useEffect(() => {
@@ -52,4 +53,26 @@ export const useViewportEvents = () => {
 			}
 		};
 	}, []);
+
+	useEffect(() => {
+		const keydownHandler = (event: KeyboardEvent) => {
+			if (event.metaKey || event.ctrlKey) {
+				switch (event.key) {
+					case 'z':
+						if (event.shiftKey) {
+							history.forward();
+						} else {
+							history.back();
+						}
+						break;
+				}
+			}
+		};
+
+		document.addEventListener('keydown', keydownHandler);
+
+		return () => {
+			document.removeEventListener('keydown', keydownHandler);
+		};
+	});
 };
